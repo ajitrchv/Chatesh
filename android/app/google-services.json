@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "623593679592",
+    "project_id": "chatesh-pro",
+    "storage_bucket": "chatesh-pro.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:623593679592:android:7b0d2de4d31dc0dde7f75d",
+        "android_client_info": {
+          "package_name": "com.example.chatesh"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "623593679592-433gim0ro0pg8g9bbm22cu5ac0e25i1r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmFRVrpOP87sFn2h0AXFbPrsrz0T2e7og"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "623593679592-433gim0ro0pg8g9bbm22cu5ac0e25i1r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
