@@ -10,8 +10,7 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  CollectionReference msgs = FirebaseFirestore.instance
-      .collection('chats');
+  CollectionReference msgs = FirebaseFirestore.instance.collection('chats');
 
   List msgListMain = [];
 
@@ -22,17 +21,29 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         title: Text("Chatesh"),
       ),
-      body: ListView.builder(
-        itemBuilder: (ctx, i) => Container(
-          padding: const EdgeInsets.all(10),
-          child: const Text(
-            "Hi Chatesh!",
-            style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black54),
-          ),
-        ),
+      body: StreamBuilder(
+        stream: msgs.snapshots(),
+        builder: (ctx, streamSnapshot) {
+          if(streamSnapshot.connectionState == ConnectionState.waiting)
+          {
+            return const Center(child: CircularProgressIndicator());
+          }
+          else {
+            return ListView.builder(
+            itemCount: getcount(),
+            itemBuilder: (ctx, i) => Container(
+              padding: const EdgeInsets.all(10),
+              child:  Text(
+                msgListMain[i],
+                style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black54),
+              ),
+            ),
+          );
+          }
+        },
       ),
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add),
@@ -40,13 +51,27 @@ class _ChatScreenState extends State<ChatScreen> {
           //=================================
 
           //=================================
-          
+
           fetchDBList();
-          
+
           //print("$msgListMain======================================================the main item");
         },
       ),
     );
+  }
+
+  int getcount() {
+    try {
+      int counter = 0;
+      msgListMain.forEach((element){
+        counter++;
+      });
+        //print(counter);
+        return counter;
+    } catch (e) {
+      print(e.toString());
+      rethrow;
+    }
   }
 
   Future getMessage() async {
@@ -66,69 +91,25 @@ class _ChatScreenState extends State<ChatScreen> {
       return ls;
     } catch (e) {
       print(e.toString());
-      print('===================cactched error============================');
+      print('===================caught error============================');
       //return null;
     }
   }
 
   fetchDBList() async {
-    dynamic resultmsg = await getMessage();
+    var resultmsg = await getMessage();
     //print("${resultmsg}===================================fetchdb");
     if (resultmsg == null) {
       print("unable to get msg");
+      //msgListMain.add('null');
+      return resultmsg;
     } else {
       setState(() {
-         msgListMain = resultmsg;
+        msgListMain = resultmsg;
       });
-     }
-msgListMain.forEach((element) {print(element);});
+    }
+   
+      //print(msgListMain);
+   
   }
 }
-
-
-
-
-
-//         FutureBuilder<DocumentSnapshot>(
-          //           future: msgs.doc().get(),
-          //           builder:
-          //         (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-
-          //       if (snapshot.hasError) {
-          //         return Text("Something went wrong");
-          //       }
-
-          //       if (snapshot.hasData && !snapshot.data!.exists) {
-          //         return Text("Document does not exist");
-          //       }
-          //       if (snapshot.connectionState == ConnectionState.done) {
-          //         Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
-          //         //Center(child: Text("Full Name: ${data['full_name']} ${data['last_name']}"));
-          //         Center(child: Text("${data['text']}"));
-          //         if (snapshot.connectionState == ConnectionState.done) {
-          //         Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
-          //         return Text("Full Name: ${data['full_name']} ${data['last_name']}");
-          //       }
-
-          //       }
-          //         });
-
-          //   print("inside onpressed Floating============================================================");
-          //   Firebase.initializeApp();
-          //   FirebaseFirestore.instance
-          //       .collection('chats/Je4VNAYCG8T9FwtRgu1Z/messages')
-          //       .snapshots()
-          //       .listen(
-          //     (data) {
-          //       print("inside listen data============================================================");
-
-          //       data.docs.forEach((element) {
-          //         print("inside foreach============================================================");
-
-          //         print(element.data()['text']);
-
-          //         print("inside after text===========================================================");
-
-          //       });
-          //     },
-          //   );
