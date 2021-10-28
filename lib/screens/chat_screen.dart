@@ -43,7 +43,7 @@ class _ChatScreenState extends State<ChatScreen> {
           
           fetchDBList();
           
-          print("$msgListMain======================================================the main item");
+          //print("$msgListMain======================================================the main item");
         },
       ),
     );
@@ -52,34 +52,36 @@ class _ChatScreenState extends State<ChatScreen> {
   Future getMessage() async {
     List ls = [];
     var jdoc;
+    var jdoc2;
     try {
       await msgs.get().then((qrySnapshot) {
         qrySnapshot.docs.forEach((element) {
-          print('${element.data()}=====================before encode');
+          //print('${element.data()}=====================before encode');
           jdoc = json.encode(element.data());
-          print('${element.data()}=====================Json Encoded');
-          ls.add(jdoc);
+          jdoc2 = json.decode(jdoc)["text"];
+          //print('${jdoc2}=====================Json Encoded');
+          ls.add(jdoc2);
         });
       });
       return ls;
     } catch (e) {
-      print("${e.toString()}=================================");
-      print('===================cactch============================');
+      print(e.toString());
+      print('===================cactched error============================');
       //return null;
     }
   }
 
   fetchDBList() async {
     dynamic resultmsg = await getMessage();
-    print("$resultmsg===========================================================fetchdb");
+    //print("${resultmsg}===================================fetchdb");
     if (resultmsg == null) {
       print("unable to get msg");
     } else {
       setState(() {
          msgListMain = resultmsg;
-         print("$msgListMain================the main in=========fetchdb");
       });
      }
+msgListMain.forEach((element) {print(element);});
   }
 }
 
