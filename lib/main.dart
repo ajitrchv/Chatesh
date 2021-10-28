@@ -1,4 +1,8 @@
-import './screens/chat_screen.dart';
+import 'package:chatesh/screens/auth_screen.dart';
+
+import './widgets/auth.dart';
+
+
 import 'package:flutter/material.dart';
  import 'package:firebase_core/firebase_core.dart';
 
@@ -19,9 +23,12 @@ void main() async {
             return MaterialApp(
               title: 'Flutter Chat',
               theme: ThemeData(
-                primarySwatch: Colors.blue,
+                primarySwatch: Colors.purple,
+                backgroundColor: Colors.pink,
+                accentColor: Colors.pink,
+                accentColorBrightness: Brightness.dark,
               ),
-              home: ChatScreen(),
+              home: AuthScreen(),
             );
           },
         );
