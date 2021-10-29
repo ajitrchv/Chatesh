@@ -3,15 +3,34 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'dart:convert';
 
-class ChatScreen extends StatelessWidget {
+class ChatScreen extends StatefulWidget {
+  static const routeName = '/ChatScreen';
+  @override
+  State<ChatScreen> createState() => _ChatScreenState();
+}
+
+class _ChatScreenState extends State<ChatScreen> {
   CollectionReference msgs = FirebaseFirestore.instance.collection('chats');
 
   List msgListMain = [];
+
   int count = 0;
+  var i=0;
+  vs()async{
+    await fetchDBList();
+    setState(() {
+      
+    });
+  }
 
   @override
-  Widget build(BuildContext context) {
-    fetchDBList();
+  Widget build(BuildContext context){
+    if(i==0){
+      vs();
+      i=1;
+    }
+    
+
     List msgList = [];
     return Scaffold(
       appBar: AppBar(
@@ -53,12 +72,13 @@ class ChatScreen extends StatelessWidget {
             'text': 'Clicked button $count times to add the message num:$count'
           });
 
-          fetchDBList();
+         vs();
 
           //print("$msgListMain======================================================the main item");
         },
       ),
     );
+    
   }
 
   int getcount() {
@@ -82,14 +102,18 @@ class ChatScreen extends StatelessWidget {
     try {
       await msgs.get().then((qrySnapshot) {
         qrySnapshot.docs.forEach((element) {
-          //print('${element.data()}=====================before encode');
-          jdoc = json.encode(element.data());
-          jdoc2 = json.decode(jdoc)["text"] ?? 
-                  '🚫Deleted message';
-          //print('${jdoc2}=====================Json Encoded');
-          ls.add(jdoc2);
+          
+          jdoc = element.data();
+          //print('${jdoc['text']}=====================element');
+          if(jdoc['text']!=null){
+           ls.add(jdoc['text']);
+          }
+          else{
+            ls.add('🚫Deleted message');
+          }
         });
       });
+     
       return ls;
     } catch (e) {
       print(e.toString());
@@ -105,6 +129,7 @@ class ChatScreen extends StatelessWidget {
       print("unable to get msg");
       //msgListMain.add('null');
       return resultmsg;
+      
     } else {
       msgListMain = resultmsg;
     }

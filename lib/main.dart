@@ -1,4 +1,7 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:chatesh/screens/auth_screen.dart';
+import 'package:chatesh/screens/chat_screen.dart';
 
 import './widgets/auth.dart';
 
@@ -23,10 +26,8 @@ void main() async {
             return MaterialApp(
               title: 'Flutter Chat',
               theme: ThemeData(
-                primarySwatch: Colors.purple,
                 backgroundColor: Colors.pink,
-                accentColor: Colors.pink,
-                accentColorBrightness: Brightness.dark,
+                accentColorBrightness: Brightness.dark, colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.purple).copyWith(secondary: Colors.pink),
               ),
               home: AuthScreen(),
             );
