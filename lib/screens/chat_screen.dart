@@ -1,5 +1,8 @@
+import 'package:chatesh/screens/auth_screen.dart';
+import 'package:chatesh/widgets/auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'dart:convert';
 
@@ -15,26 +18,52 @@ class _ChatScreenState extends State<ChatScreen> {
   List msgListMain = [];
 
   int count = 0;
-  var i=0;
-  vs()async{
+  var i = 0;
+  vs() async {
     await fetchDBList();
-    setState(() {
-      
-    });
+    setState(() {});
   }
 
   @override
-  Widget build(BuildContext context){
-    if(i==0){
+  Widget build(BuildContext context) {
+    if (i == 0) {
       vs();
-      i=1;
+      i = 1;
     }
-    
 
     List msgList = [];
     return Scaffold(
       appBar: AppBar(
         title: const Text("Chatesh"),
+        actions: [
+          DropdownButton(
+            icon: const Icon(
+              Icons.more_vert,
+              color: Colors.white,
+            ),
+            items: [
+              DropdownMenuItem(
+                child: Container(
+                  child: Row(
+                    children: const [
+                      Icon(Icons.exit_to_app),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text('Log Out')
+                    ],
+                  ),
+                ),
+                value: 'logout',
+              ),
+            ],
+            onChanged: (itemID){
+              if(itemID == 'logout'){
+                FirebaseAuth.instance.signOut();
+              }
+            },
+          ),
+        ],
       ),
       body: StreamBuilder(
         stream: msgs.snapshots(),
@@ -48,13 +77,15 @@ class _ChatScreenState extends State<ChatScreen> {
                 padding: const EdgeInsets.all(10),
                 child: Text(
                   msgListMain[i],
-                  style:  msgListMain[i]=='🚫Deleted message' ?  const TextStyle(
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.grey) : const TextStyle(
-                      // fontSize: 20,
-                      fontWeight: FontWeight.normal,
-                      color: Colors.black),
+                  style: msgListMain[i] == '🚫Deleted message'
+                      ? const TextStyle(
+                          fontStyle: FontStyle.italic,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.grey)
+                      : const TextStyle(
+                          // fontSize: 20,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black),
                 ),
               ),
             );
@@ -72,13 +103,12 @@ class _ChatScreenState extends State<ChatScreen> {
             'text': 'Clicked button $count times to add the message num:$count'
           });
 
-         vs();
+          vs();
 
           //print("$msgListMain======================================================the main item");
         },
       ),
     );
-    
   }
 
   int getcount() {
@@ -102,18 +132,16 @@ class _ChatScreenState extends State<ChatScreen> {
     try {
       await msgs.get().then((qrySnapshot) {
         qrySnapshot.docs.forEach((element) {
-          
           jdoc = element.data();
           //print('${jdoc['text']}=====================element');
-          if(jdoc['text']!=null){
-           ls.add(jdoc['text']);
-          }
-          else{
+          if (jdoc['text'] != null) {
+            ls.add(jdoc['text']);
+          } else {
             ls.add('🚫Deleted message');
           }
         });
       });
-     
+
       return ls;
     } catch (e) {
       print(e.toString());
@@ -129,7 +157,6 @@ class _ChatScreenState extends State<ChatScreen> {
       print("unable to get msg");
       //msgListMain.add('null');
       return resultmsg;
-      
     } else {
       msgListMain = resultmsg;
     }
