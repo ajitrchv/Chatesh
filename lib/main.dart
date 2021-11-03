@@ -2,6 +2,7 @@
 
 import 'package:chatesh/screens/auth_screen.dart';
 import 'package:chatesh/screens/chat_screen.dart';
+import 'package:chatesh/widgets/messages.dart';
 
 import './widgets/auth.dart';
 
