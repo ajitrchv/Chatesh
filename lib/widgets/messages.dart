@@ -16,51 +16,44 @@ class _MessagesState extends State<Messages> {
   var itemCount = 0;
   @override
   build(BuildContext context) async{
-    return StreamBuilder(
-      stream: msgs.snapshots(),
-      builder: (ctx, AsyncSnapshot<QuerySnapshot> streamSnapshot) {
-          if (streamSnapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else {
-            var chatDocs = streamSnapshot.data!.docs;
-
-
-            print(chatDocs);
-            return  Text(chatDocs.toString());
-            //ListView.builder(itemCount: getCount(),itemBuilder: (ctx, index) =>
-                //Text(chatDocs.toString())
-                
-                //);
-          }
-      }
-      
+    return Container(
+      margin: const EdgeInsets.only(top: 8),
+      padding: const EdgeInsets.all(8),
+      child: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection('chats').orderBy('createdAt', descending: true).snapshots(),
+        builder: (ctx, AsyncSnapshot streamSnapshot) {
+            if (streamSnapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else {
+              List<DocumentSnapshot> doc = streamSnapshot.data.docs;
+                    var a  = doc.map((document) {
+                      //print("${(document.contains('')).toString()}===");
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(document['text'].toString() == 'null' ?
+                       '🚫Deleted message'
+                       : (document['text']),style: document['text'].toString() == 'null' ?
+                      const TextStyle(
+                                    fontSize: 25,
+                                    fontStyle: FontStyle.italic,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.grey)
+                       : const TextStyle(
+                                    fontSize: 30,
+                                    fontWeight: FontWeight.normal,
+                                    color: Colors.black),),
+                    );
+                    }).toList();
+                    return ListView(
+                      reverse: true,
+                      children: [
+                        ...a,
+                    ],);
+            }
+        }
+        
+      ),
     );
-  }
-
-  getCount() async {
-    List ls = [];
-    try {
-      await msgs.get().then((qrySnapshot) {
-        qrySnapshot.docs.forEach((element) {
-          itemCount = itemCount + 1;
-        });
-      });
-
-      return itemCount;
-    } catch (e) {
-      print(e.toString());
-      // print('===================caught error============================');
-      //return null;
-    }
-  }
-   void messageStream() async {
-    await for (final snapshot
-        in FirebaseFirestore.instance.collection('chats').snapshots()) {
-      for (var message in snapshot.docs) {
-        print('========================message stream======================================================');
-        print(message.data()['text']);
-      }
-    }
   }
 }
 
