@@ -1,18 +1,44 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MessageBubble extends StatelessWidget {
+
+getUserName(){
+  return
+  FutureBuilder<DocumentSnapshot>(
+                      future: FirebaseFirestore.instance.collection('users').doc(usrinc).get(),
+                      builder: (context, snapshot) {
+                        
+                        if(snapshot.connectionState == ConnectionState.waiting){
+                          return const CircularProgressIndicator();
+                        }
+                        return Text(snapshot.data!['username'], style: 
+                        TextStyle(
+                          color: isMe ? Colors.blue : Colors.green,
+                          fontSize: 15, 
+                          fontStyle: FontStyle.italic, 
+                          fontWeight: FontWeight.bold 
+                          ), 
+                          textAlign: isMe?TextAlign.end:TextAlign.start,);
+                      }
+                    );
+
+}
   // const MessageBubble({ Key? key }) : super(key: key);
-  MessageBubble(this.message, this.uid,);
+  MessageBubble(this.message, this.usrinc, this.username);
   final String message;
-  var uid;
+  var usrinc;
+  var username;
   bool isMe= false;
+  //final String username;
   //final Key key;
   final user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
-    if(uid == user!.uid){
+    if(usrinc == user!.uid){
       isMe = true;
     }
     return Row(
@@ -33,19 +59,45 @@ class MessageBubble extends StatelessWidget {
           width: 200,
           padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
           //margin: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-          child: Text(
-            message,
-            style: message == '🚫Deleted Message'
-                ? const TextStyle(
-                    fontSize: 15,
-                    fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.grey)
-                : const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.normal,
-                    color: Colors.black87),
-                    textAlign: isMe ? TextAlign.end : TextAlign.start,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    if(isMe)
+                    const Text(' '),
+                    Text(username, style: 
+                        TextStyle(
+                          color: isMe ? Colors.blue : Colors.green,
+                          fontSize: 15, 
+                          fontStyle: FontStyle.italic, 
+                          fontWeight: FontWeight.bold 
+                          ), 
+                          textAlign: isMe?TextAlign.end:TextAlign.start,),
+                    if(!isMe)
+                    const Text(' '),
+                  ],
+                )
+              ),
+              Text(
+                    message,
+                    style: message == '🚫Deleted Message'
+                        ? const TextStyle(
+                            fontSize: 15,
+                            fontStyle: FontStyle.italic,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.grey)
+                        : const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.normal,
+                            color: Colors.black87),
+                            textAlign: TextAlign.start,
+
+              ),
+            ],
           ),
         ),
       ],

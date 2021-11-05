@@ -47,15 +47,19 @@ showDialog(
       } else {
             authResult = await _auth.createUserWithEmailAndPassword(
             email: email as String, password: password as String);
+ 
+            print(authResult);
              Map<String, String> userCredInfo = 
                 {
                   'username': username as String,
-                  'email':email,
-                  'password': password,
+                  'email': email as String,
+                  'password': password as String,
                 };
-        await FirebaseFirestore.instance.collection('users')
-        .doc(authResult.user!.uid).set(userCredInfo);
+        var uid = authResult.user!.uid;
+        FirebaseFirestore.instance.collection('users').doc(uid).set(userCredInfo);
+        //FirebaseFirestore.instance.collection('users').doc(authResult.user!.uid).set(userCredInfo);
       }
+
       print(authResult);
       if(authResult.toString().contains('AdditionalUserInfo')){
         Navigator.of(context).pushReplacementNamed(ChatScreen.routeName);
@@ -72,20 +76,27 @@ showDialog(
       Future.delayed(Duration.zero, () => showAlert(context,messageofPlatform,'Uh,oh!'));
       //showAlert(context, messageofPlatform,'Uh,oh!');
     } catch (e) {
+      // print('===========Error==============');
+      // print(e.toString());
       setState(() {
         _isLoading =false;
       });
       var contMessage = 'Welcome!';
       var titMessage = 'Uh,oh!';
       var ErrChk = false;
-      if(e.toString().contains('The email address is badly formatted')){
-        contMessage = 'Please check your email address and try again!';
-        titMessage = 'Email Error';
+      if(e.toString().contains('user-not-found')){
+        contMessage = 'Check your credentials!';
+        titMessage = 'Credentials Error';
         ErrChk = true;
       }
       if(e.toString().contains('password is invalid')){
         contMessage = 'Please check your password and try again!';
         titMessage = 'Invalid Password';
+        ErrChk = true;
+      }
+      if(e.toString().contains('The email address is badly formatted')){
+        contMessage = 'Please check your email address and try again!';
+        titMessage = 'Email Error';
         ErrChk = true;
       }
 

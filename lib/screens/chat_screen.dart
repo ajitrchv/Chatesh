@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../widgets/messages.dart';
+import '../functions/backwardcompat.dart';
 
 class ChatScreen extends StatefulWidget {
   static const routeName = '/ChatScreen';
@@ -62,7 +63,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     //print("${(document.contains('')).toString()}===");
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: MessageBubble(document['text'] == 'null' ? '🚫Deleted Message' : document['text'], document['userID'],)
+                      child: MessageBubble(document['text'] == 'null' ? '🚫Deleted Message' : document['text'], document['userID'], document['username'])
                     );
                   }).toList();
                   return ListView(
