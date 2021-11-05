@@ -30,17 +30,9 @@ class _ChatScreenState extends State<ChatScreen> {
               Icons.more_vert,
               color: Colors.white,
             ),
-            items: [
+            items: const [
               DropdownMenuItem(
-                child: Row(
-                  children: const [
-                    Icon(Icons.exit_to_app),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Text('Log Out')
-                  ],
-                ),
+                child: Text('Log Out'),
                 value: 'logout',
               ),
             ],
@@ -70,7 +62,7 @@ class _ChatScreenState extends State<ChatScreen> {
                     //print("${(document.contains('')).toString()}===");
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: MessageBubble(document['text'] == 'null' ? '🚫Deleted Message' : document['text'])
+                      child: MessageBubble(document['text'] == 'null' ? '🚫Deleted Message' : document['text'], document['userID'],)
                     );
                   }).toList();
                   return ListView(
