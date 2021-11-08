@@ -66,7 +66,14 @@ class _ChatScreenState extends State<ChatScreen> {
 
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: MessageBubble(document['text'] == 'null' ? '🚫Deleted Message' : document['text'], document['userID'], document['username'])
+                      child: MessageBubble(
+                        document['text'] == 'null' 
+                        ? '🚫Deleted Message' 
+                        : document['text'], 
+                        document['userID'], 
+                        document['username'],
+                        document['userimage']
+                        )
                     );
                   }).toList();
                   return ListView(

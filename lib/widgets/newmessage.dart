@@ -44,7 +44,6 @@ class _NewMessageState extends State<NewMessage> {
         'userID': user!.uid,
         'username': userdata['username'],
         'userimage': userdata['image_url'],
-        
       };
     await FirebaseFirestore.instance.collection('chats').add(messageSet);
     _controller.clear();
