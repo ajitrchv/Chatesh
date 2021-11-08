@@ -9,7 +9,7 @@ class MessageBubble extends StatelessWidget {
 getUserName(){
   return
   FutureBuilder<DocumentSnapshot>(
-                      future: FirebaseFirestore.instance.collection('users').doc(usrinc).get(),
+                      future: FirebaseFirestore.instance.collection('users').doc(userid).get(),
                       builder: (context, snapshot) {
                         
                         if(snapshot.connectionState == ConnectionState.waiting){
@@ -28,9 +28,9 @@ getUserName(){
 
 }
   // const MessageBubble({ Key? key }) : super(key: key);
-  MessageBubble(this.message, this.usrinc, this.username);
+  MessageBubble(this.message, this.userid, this.username);
   final String message;
-  var usrinc;
+  var userid;
   var username;
   bool isMe= false;
   //final String username;
@@ -38,7 +38,7 @@ getUserName(){
   final user = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
-    if(usrinc == user!.uid){
+    if(userid == user!.uid){
       isMe = true;
     }
     return Row(
@@ -49,8 +49,8 @@ getUserName(){
           decoration: BoxDecoration(
             borderRadius: BorderRadius.only
               (
-                topLeft: Radius.circular(isMe ? 30 : 0),
-                topRight: Radius.circular(isMe ? 0 : 30),
+                topLeft: Radius.circular(isMe ? 20 : 0),
+                topRight: Radius.circular(isMe ? 0 : 20),
                 bottomLeft: const Radius.circular(30),
                 bottomRight: const Radius.circular(30),
               ),

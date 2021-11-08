@@ -15,24 +15,38 @@ class _NewMessageState extends State<NewMessage> {
 
   var _enteredMessage = '';
   final _controller = new TextEditingController();
-
+   final user =  FirebaseAuth.instance.currentUser;
 
 
   void _sendMessage() async{
     FocusScope.of(context).unfocus();
-    final user =  FirebaseAuth.instance.currentUser;
-    final userdata = await FirebaseFirestore.instance.collection('users').doc(user!.uid).get();
-    // print('=====USERNAME>>==========');
-    // print(user);
+    final x = user!.uid;
+    
+    final userdata = await FirebaseFirestore.instance.collection('users').doc(x).get();
+    //final userdata = await FirebaseFirestore.instance.collection('users');
+    //=================================================================================
+    //
+    //        HERE PROBLEM IS FROMM AUTHSCREEN
+    //         NOT ALLOWING USER DATA TO PASS TO DB
+    //=================================================================================
+    print('userID');
+    print(x);
+     print('=====USER>>==========');
+     print(userdata.data().toString().contains('username') ? userdata.get('username') : 'none username found');
+     print(userdata.data());
+     print("======seperator");
+     print(user);
+     print('^^^^^^user^^^^^^^^^');
         Map<String, dynamic> messageSet = 
                {
         'text': _enteredMessage,
         'createdAt': Timestamp.now(),
-        'userID': user.uid,
+        'userID': user!.uid,
         'username': userdata['username'],
+        'userimage': userdata['image_url'],
         
       };
-    FirebaseFirestore.instance.collection('chats').add(messageSet);
+    await FirebaseFirestore.instance.collection('chats').add(messageSet);
     _controller.clear();
 
     

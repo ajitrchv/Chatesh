@@ -60,7 +60,10 @@ class _ChatScreenState extends State<ChatScreen> {
                 } else {
                   List<DocumentSnapshot> doc = streamSnapshot.data.docs;
                   var a = doc.map((document) {
-                    //print("${(document.contains('')).toString()}===");
+                    // print(document['text']);
+                    // print(document['userID']);
+                    // print(document['username']);
+
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: MessageBubble(document['text'] == 'null' ? '🚫Deleted Message' : document['text'], document['userID'], document['username'])
