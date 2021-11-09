@@ -1,13 +1,21 @@
-// ignore_for_file: avoid_print
+
 
 import 'package:chatesh/widgets/message_bubble.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '../widgets/newmessage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../widgets/messages.dart';
-import '../functions/backwardcompat.dart';
+// import 'package:firebase_core_web/firebase_core_web.dart';
+// import '../functions/backwardcompat.dart';
+// import 'package:firebase_messaging/firebase_messaging.dart';
+  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+
+  await Firebase.initializeApp();
+  print('Handling a background message ${message.messageId}');
+}
 
 class ChatScreen extends StatefulWidget {
   static const routeName = '/ChatScreen';
@@ -16,6 +24,51 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+
+  void initState(){
+    super.initState();
+    final fbm = FirebaseMessaging.instance;
+        fbm.subscribeToTopic('chats');
+
+
+
+        FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      Map<String, dynamic> data = message.data;
+      notification = notification as RemoteNotification;
+      print("_messaging onMessage: ${message}");
+      //showNotification(notification.body, notification.title);
+      String type = data['type'];
+      if (type == "view") {
+        String notifPath = data['subject'];
+        //notificationProvider.addPath(notifPath);
+        print('new notification added to notificationList: ${notifPath}');
+      }
+    });
+        
+   
+    FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+      print("message recieved on message");
+      print(event.notification!.body);
+    });
+
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage event) {
+      print("message recieved on message opened app");
+      print(event.notification!.body);
+  });
+
+    //FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+
+
+ 
+   
+  //   FirebaseMessaging.onMessage.listen((RemoteMessage event) {
+  //     print("message recieved");
+  //     print(event.notification!.body);
+  // });
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }
+
   CollectionReference msgs = FirebaseFirestore.instance.collection('chats');
 
   var msgListMain = [];

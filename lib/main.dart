@@ -3,13 +3,16 @@
 import 'package:chatesh/screens/auth_screen.dart';
 import 'package:chatesh/screens/chat_screen.dart';
 import 'package:chatesh/widgets/messages.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import './widgets/auth.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
  import 'package:firebase_core/firebase_core.dart';
-
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  print("Handling a background message");
+}
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();

@@ -29,14 +29,14 @@ class _NewMessageState extends State<NewMessage> {
     //        HERE PROBLEM IS FROMM AUTHSCREEN
     //         NOT ALLOWING USER DATA TO PASS TO DB
     //=================================================================================
-    print('userID');
-    print(x);
-     print('=====USER>>==========');
-     print(userdata.data().toString().contains('username') ? userdata.get('username') : 'none username found');
-     print(userdata.data());
-     print("======seperator");
-     print(user);
-     print('^^^^^^user^^^^^^^^^');
+    //print('userID');
+    //print(x);
+     //print('=====USER>>==========');
+    //print(userdata.data().toString().contains('username') ? userdata.get('username') : 'none username found');
+     //print(userdata.data());
+     //print("======seperator");
+     //print(user);
+     //print('^^^^^^user^^^^^^^^^');
         Map<String, dynamic> messageSet = 
                {
         'text': _enteredMessage,

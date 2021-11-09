@@ -36,7 +36,7 @@ showDialog(
   var _isLoading = false;
   final _auth = FirebaseAuth.instance;
   Future<void> _submitAuthForm(String? email, String? password,
-      String? username,File image, bool isLogin, BuildContext ctx) async {
+      String? username,File? image, bool isLogin, BuildContext ctx) async {
     UserCredential authResult;
     try {
       setState(() {
@@ -49,12 +49,18 @@ showDialog(
       } else {
             authResult = await _auth.createUserWithEmailAndPassword(
             email: email as String, password: password as String);
- 
+      
+      setState(() {
+        _isLoading =false;
+      });
+       if(authResult.toString().contains('AdditionalUserInfo')){
+        Navigator.of(context).pushReplacementNamed(ChatScreen.routeName);
+      }
             //print(authResult);
             final ref2 = await FirebaseStorage.instance
             .ref('user_image')
             .child(authResult.user!.uid+'.jpg')
-            .putFile(image)
+            .putFile(image as File)
             .then((takeSnapshot) => print('Task Done======================='));
 
             //ref2.putFile(image);
@@ -88,9 +94,7 @@ showDialog(
       }
 
       print(authResult);
-      if(authResult.toString().contains('AdditionalUserInfo')){
-        Navigator.of(context).pushReplacementNamed(ChatScreen.routeName);
-      }
+     
       // ignore: nullable_type_in_catch_clause
     } on PlatformException catch (e) {
       setState(() {

@@ -11,8 +11,8 @@ class Auth extends StatefulWidget {
   final void Function(
     String email, 
     String password, 
-    String username,
-    File image,
+    String? username,
+    File? image,
     bool isLogin, 
     BuildContext ctx
     ) submitFn;
@@ -58,7 +58,7 @@ class _AuthState extends State<Auth> {
       // print(_userPwd);
       // print(_userEmail);
       //auth req to firebase
-
+      
       widget.submitFn(
         _userEmail!.trim(), 
         _userPwd!.trim(), 
@@ -67,6 +67,7 @@ class _AuthState extends State<Auth> {
         _isLogin, 
         context,
         );
+       
       setState(() {
         _showSpinner = false;
       });
